@@ -110,7 +110,7 @@ import Dropdown from 'primevue/dropdown'
 import type { User } from '@/services/auth/interfaces/login-response.interface'
 import * as userService from '@/services/user/user.service'
 import * as catalogsService from '@/services/catalogs/catalog.service'
-import type { GetUsersParams } from '@/services/user/interfaces/get-users-params.interface'
+import type { GetUserParams } from '@/services/user/interfaces/get-user-params.interface'
 import type { Profile } from '@/services/catalogs/interfaces/catalogs-response.interface'
 import axios from 'axios'
 
@@ -139,7 +139,7 @@ const user = reactive<User>({
   state: false
 })
 
-const params = reactive<GetUsersParams>({
+const params = reactive<GetUserParams>({
   email: '',
   paginate: true,
   page: 1,

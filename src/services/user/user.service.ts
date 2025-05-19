@@ -1,14 +1,14 @@
 import { getAxiosAdapter } from '../common/axios.service'
 import { type User } from '../auth/interfaces/login-response.interface'
-import type { RegisterAdmin, UpdateUser } from './interfaces/users-request.interface'
-import type { GetUsersParams } from './interfaces/get-users-params.interface'
+import type { RegisterAdmin, UpdateUser } from './interfaces/user-request.interface'
+import type { GetUserParams } from './interfaces/get-user-params.interface'
 import type { ChangeEstadoResponse } from './interfaces/change-estado-response.interface'
 import type { ApiPaginatedResponse } from '../common/interfaces/api-paginated-response.interface'
-import type { RegisterAdminResponse, UpdateUserResponse } from './interfaces/users-response.interface'
+import type { RegisterAdminResponse, UpdateUserResponse } from './interfaces/user-response.interface'
 
 const axiosAdapter = getAxiosAdapter()
 
-export const getAll = async (params: GetUsersParams) => {
+export const getAll = async (params: GetUserParams) => {
   const config = {
     params
   }
