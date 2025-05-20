@@ -1,3 +1,4 @@
+import type { CategoryProduct, QualityProduct } from '@/services/catalogs/interfaces/catalogs-response.interface'
 import type { Manufacturer } from '@/services/manufacturers/interfaces/manufacturer-response.interface'
 import type { Presentation } from '@/services/presentations/interfaces/presentation-response.interface'
 
@@ -15,18 +16,6 @@ export interface Product {
   presentations: Presentation[]
   images: ProductImage[]
   manufacturer: Manufacturer
-}
-
-export interface CategoryProduct {
-  id: number
-  name: string
-  description: string
-}
-
-export interface QualityProduct {
-  id: number
-  name: string
-  description: string
 }
 
 export interface ProductImage {

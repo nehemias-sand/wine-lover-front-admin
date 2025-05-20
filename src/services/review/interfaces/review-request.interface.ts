@@ -4,4 +4,4 @@ export interface CreateReview {
   cover_image: File
 }
 
-export type UpdateReview = Partial<CreateReview>
+export type UpdateReview = CreateReview

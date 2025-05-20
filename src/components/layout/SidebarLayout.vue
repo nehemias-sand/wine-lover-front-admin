@@ -1,7 +1,7 @@
 <template>
   <aside class="w-64 h-screen bg-white shadow-lg flex flex-col transition-all duration-300 ease-in-out">
     <!-- Header con logo -->
-    <div class="p-4 border-b border-gray-200">
+    <div class="pl-9 pr-10 border-b border-gray-200">
       <img
         src="../../../public/wine-lovers.png"
         alt="Logo Universidad"
@@ -72,7 +72,7 @@ const menuItems = computed(() => {
     { name: 'Gestión de Clientes', path: '/clientes' },
     { name: 'Gestión de Productos', path: '/productos' },
     { name: 'Gestión de Presentaciones', path: '/presentaciones' },
-    { name: 'Gestión de Productores', path: '/productores' },
+    { name: 'Gestión de Fabricantes', path: '/fabricantes' },
   ]
 
   const socialItems = [

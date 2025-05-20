@@ -48,8 +48,8 @@ const router = createRouter({
           meta: { requiresAuth: true, canAccess: ['Admin'] }
         },
         {
-          path: '/productores',
-          name: 'Productores',
+          path: '/fabricantes',
+          name: 'Fabricantes',
           component: () => import('../views/Admin/ManufacturerView.vue'),
           meta: { requiresAuth: true, canAccess: ['Admin'] }
         },
@@ -64,6 +64,18 @@ const router = createRouter({
           name: 'Clientes',
           component: () => import('../views/Admin/ClientView.vue'),
           meta: { requiresAuth: true, canAccess: ['Admin'] }
+        },
+        {
+          path: '/ordenes',
+          name: 'Ordenes',
+          component: () => import('../views/Logistic/OrderView.vue'),
+          meta: { requiresAuth: true, canAccess: ['Logistic'] }
+        },
+        {
+          path: '/reviews',
+          name: 'Reviews',
+          component: () => import('../views/Social/ReviewView.vue'),
+          meta: { requiresAuth: true, canAccess: ['Social'] }
         },
       ]
     },

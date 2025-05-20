@@ -19,18 +19,34 @@ export const getAll = async (params: GetReviewParams) => {
   return await axiosAdapter.get<ApiPaginatedResponse<Review>>(`/v1/social/review`, config)
 }
 
-export const create = async (createReviewRequest: CreateReview) => {
-  return await axiosAdapter.post<CreateReview, ReviewResponse>(
-    `/v1/social/review`,
-    createReviewRequest
-  )
+const toFormData = (data: CreateReview | UpdateReview): FormData => {
+  const formData = new FormData()
+
+  formData.append('title', String(data.title))
+  formData.append('content', String(data.content))
+  formData.append('cover_image', data.cover_image)
+
+  return formData
 }
 
-export const update = async (id: number, updateReview: UpdateReview) => {
-  return await axiosAdapter.post<UpdateReview, ReviewResponse>(
-    `/v1/social/review/${id}`,
-    updateReview
-  )
+export const create = async (createReviewRequest: CreateReview) => {
+  const formData = toFormData(createReviewRequest)
+
+  return await axiosAdapter.post<FormData, ReviewResponse>(`/v1/social/review`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export const update = async (id: number, updateReviewRequest: UpdateReview) => {
+  const formData = toFormData(updateReviewRequest)
+
+  return await axiosAdapter.post<FormData, ReviewResponse>(`/v1/social/review/${id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }
 
 export const changeState = async (id: number) => {

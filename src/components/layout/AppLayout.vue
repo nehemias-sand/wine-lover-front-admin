@@ -4,7 +4,7 @@
       <Sidebar />
       <main class="flex-1 flex flex-col overflow-hidden bg-gray-50">
         <header class="bg-gray-50 shadow-sm">
-          <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <div class="max-w-7xl mx-auto py-11 px-4 sm:px-6 lg:px-8">
             <h1 class="text-2xl font-bold text-gray-900">
               {{ currentRouteName }}
             </h1>
@@ -40,6 +40,11 @@ const currentRouteName = computed(() => {
   const routeNames = {
     Inicio: 'Inicio',
     Usuarios: 'Gestión de Usuarios',
+    Clientes: 'Gestión de Clientes',
+    Presentaciones: 'Gestión de Pesentaciones',
+    Fabricantes: 'Gestión de Fabricantes',
+    Ordenes: 'Gestión de Órdenes',
+    Reviews: 'Gestión de Reviews',
   }
 
   return routeNames[route.name as keyof typeof routeNames] || 'Inicio'

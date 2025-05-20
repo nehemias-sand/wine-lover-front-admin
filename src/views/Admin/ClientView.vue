@@ -1,9 +1,5 @@
 <template>
   <div class="p-4">
-    <div class="mb-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold">Gestión de Clientes</h1>
-    </div>
-
     <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label for="identity_number" class="block text-sm font-medium mb-1"

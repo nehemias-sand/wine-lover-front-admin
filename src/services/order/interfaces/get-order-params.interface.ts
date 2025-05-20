@@ -2,4 +2,5 @@ import type { PaginationParams } from '@/services/common/interfaces/pagination-p
 
 export interface GetOrderParams extends PaginationParams {
   order_status_id?: number
+  created_at: string
 }
