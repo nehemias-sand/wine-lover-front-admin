@@ -15,6 +15,7 @@ declare module 'vue' {
     Password: typeof import('primevue/password')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SidebarComponent: typeof import('./src/components/SidebarComponent.vue')['default']
     SidebarLayout: typeof import('./src/components/layout/SidebarLayout.vue')['default']
     Toast: typeof import('primevue/toast')['default']
   }

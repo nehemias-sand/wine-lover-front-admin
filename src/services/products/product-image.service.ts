@@ -7,7 +7,7 @@ const axiosAdapter = getAxiosAdapter()
 const toFormData = (data: CreateProductImage): FormData => {
   const formData = new FormData()
 
-  formData.append('category_product_id', String(data.product_id))
+  formData.append('product_id', String(data.product_id))
 
   data.images.forEach((image, index) => {
     formData.append(`images[${index}]`, image)

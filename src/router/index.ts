@@ -60,6 +60,12 @@ const router = createRouter({
           meta: { requiresAuth: true, canAccess: ['Admin'] }
         },
         {
+          path: '/productos',
+          name: 'Productos',
+          component: () => import('../views/Admin/ProductView.vue'),
+          meta: { requiresAuth: true, canAccess: ['Admin'] }
+        },
+        {
           path: '/clientes',
           name: 'Clientes',
           component: () => import('../views/Admin/ClientView.vue'),

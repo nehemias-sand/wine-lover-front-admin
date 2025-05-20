@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import Sidebar from './SidebarLayout.vue'
+import Sidebar from '../SidebarComponent.vue'
 
 const route = useRoute()
 
@@ -43,6 +43,7 @@ const currentRouteName = computed(() => {
     Clientes: 'Gestión de Clientes',
     Presentaciones: 'Gestión de Pesentaciones',
     Fabricantes: 'Gestión de Fabricantes',
+    Productos: 'Gestión de Productos',
     Ordenes: 'Gestión de Órdenes',
     Reviews: 'Gestión de Reviews',
   }
