@@ -47,6 +47,24 @@ const router = createRouter({
           component: () => import('../views/Admin/UsuariosView.vue'),
           meta: { requiresAuth: true, canAccess: ['Admin'] }
         },
+        {
+          path: '/productores',
+          name: 'Productores',
+          component: () => import('../views/Admin/ManufacturerView.vue'),
+          meta: { requiresAuth: true, canAccess: ['Admin'] }
+        },
+        {
+          path: '/presentaciones',
+          name: 'Presentaciones',
+          component: () => import('../views/Admin/PresentationView.vue'),
+          meta: { requiresAuth: true, canAccess: ['Admin'] }
+        },
+        {
+          path: '/clientes',
+          name: 'Clientes',
+          component: () => import('../views/Admin/ClientView.vue'),
+          meta: { requiresAuth: true, canAccess: ['Admin'] }
+        },
       ]
     },
     {

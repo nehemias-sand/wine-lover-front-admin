@@ -1,8 +1,6 @@
-import type { Presentation } from './presentation-response.interface'
-
-export type CreatePresentation = Omit<
-  Presentation,
-  'id'
->
+export interface CreatePresentation {
+  amount: number;
+  unit_measurement_id: number;
+}
 
 export type UpdatePresentation = Partial<CreatePresentation>

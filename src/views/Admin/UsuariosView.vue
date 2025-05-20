@@ -20,7 +20,7 @@
       :loading="loading"
       @page="onPage($event)"
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-      :rowsPerPageOptions="[10, 20, 50]"
+      :rowsPerPageOptions="[5, 10, 20, 50]"
       currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
       responsiveLayout="scroll"
       class="p-datatable-sm"
