@@ -369,9 +369,9 @@ const updateStatus = async () => {
 
 const formatCurrency = (value: string | number) => {
   const numValue = typeof value === 'string' ? parseFloat(value) : value
-  return numValue.toLocaleString('es-PE', {
+  return numValue.toLocaleString('es-SV', {
     style: 'currency',
-    currency: 'PEN'
+    currency: 'USD'
   })
 }
 

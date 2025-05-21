@@ -498,25 +498,25 @@ const viewCashbackHistory = (client: Client) => {
 
 const formatCurrency = (value: string | number) => {
   const numValue = typeof value === 'string' ? parseFloat(value) : value
-  return numValue.toLocaleString('es-PE', {
+  return numValue.toLocaleString('es-SV', {
     style: 'currency',
-    currency: 'PEN'
+    currency: 'USD'
   })
 }
 
 const formatDate = (dateString: string) => {
   if (!dateString) return 'N/A'
   const date = new Date(dateString)
-  return date.toLocaleDateString('es-PE')
+  return date.toLocaleDateString('es-SV')
 }
 
 const formatDateTime = (dateString: string) => {
   if (!dateString) return 'N/A'
   const date = new Date(dateString)
   return (
-    date.toLocaleDateString('es-PE') +
+    date.toLocaleDateString('es-SV') +
     ' ' +
-    date.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })
+    date.toLocaleTimeString('es-SV', { hour: '2-digit', minute: '2-digit' })
   )
 }
 

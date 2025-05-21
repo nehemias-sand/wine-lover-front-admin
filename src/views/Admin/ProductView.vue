@@ -22,8 +22,8 @@
               class="w-full" 
               :min="0"
               mode="currency"
-              currency="PEN"
-              locale="es-PE"
+              currency="USD"
+              locale="es-SV"
             />
             <InputNumber 
               v-model="params.max_price" 
@@ -31,8 +31,8 @@
               class="w-full" 
               :min="0"
               mode="currency"
-              currency="PEN"
-              locale="es-PE"
+              currency="USD"
+              locale="es-SV"
             />
           </div>
         </div>
@@ -88,6 +88,24 @@
       rowHover
     >
       <Column field="id" header="ID" sortable style="width: 5%"></Column>
+      <Column header="Imagen" style="width: 10%">
+        <template #body="slotProps">
+          <div 
+            v-if="slotProps.data.images && slotProps.data.images.length > 0"
+            class="w-16 h-16 relative cursor-pointer"
+            @click="openImagePreview(slotProps.data.images[0])"
+          >
+            <img 
+              :src="apiStorage + '/' + slotProps.data.images[0].url_image" 
+              :alt="slotProps.data.name"
+              class="w-full h-full object-contain rounded"
+            />
+          </div>
+          <div v-else class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+            <i class="pi pi-image text-gray-400 text-xl"></i>
+          </div>
+        </template>
+      </Column>
       <Column field="name" header="Nombre" sortable style="width: 20%"></Column>
       <Column field="category_product.name" header="Categoría" sortable style="width: 15%"></Column>
       <Column field="quality_product.name" header="Calidad" sortable style="width: 15%"></Column>
@@ -155,13 +173,16 @@
               <div 
                 v-for="image in selectedProduct.images" 
                 :key="image.id" 
-                class="relative"
+                class="relative cursor-pointer"
+                @click="openImagePreview(image)"
               >
-                <img 
-                  :src="apiStorage + '/' + image.url_image" 
-                  :alt="selectedProduct.name"
-                  class="w-full h-40 object-cover rounded-lg shadow-sm"
-                />
+                <div class="aspect-square overflow-hidden rounded-lg shadow-sm">
+                  <img 
+                    :src="apiStorage + '/' + image.url_image" 
+                    :alt="selectedProduct.name"
+                    class="w-full h-full object-contain"
+                  />
+                </div>
                 <Tag 
                   :value="image.state ? 'Activa' : 'Inactiva'" 
                   :severity="image.state ? 'success' : 'danger'"
@@ -231,12 +252,12 @@
             </Column>
             <Column header="Stock" style="width: 15%">
               <template #body="slotProps">
-                {{ getProductPresentationStock(selectedProduct.id, slotProps.data.id) }}
+                {{ slotProps.data.stock }}
               </template>
             </Column>
             <Column header="Precio Unitario" style="width: 15%">
               <template #body="slotProps">
-                {{ formatCurrency(getProductPresentationPrice(selectedProduct.id, slotProps.data.id)) }}
+                {{ formatCurrency(Number.parseFloat(slotProps.data.unit_price)) }}
               </template>
             </Column>
           </DataTable>
@@ -389,8 +410,8 @@
                       class="w-full"
                       :min="0"
                       mode="currency"
-                      currency="PEN"
-                      locale="es-PE"
+                      currency="USD"
+                      locale="es-SV"
                       :class="{ 'p-invalid': submitted && presentation.unit_price === null }"
                     />
                   </div>
@@ -436,8 +457,15 @@
               </div>
               
               <div v-if="imagesPreviews.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-                <div v-for="(preview, index) in imagesPreviews" :key="index" class="relative">
-                  <img :src="preview" alt="Vista previa" class="w-full h-32 object-cover rounded" />
+                <div 
+                  v-for="(preview, index) in imagesPreviews" 
+                  :key="index" 
+                  class="relative cursor-pointer"
+                  @click="openPreviewImageDialog(preview)"
+                >
+                  <div class="aspect-square overflow-hidden rounded">
+                    <img :src="preview" alt="Vista previa" class="w-full h-full object-contain" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -470,11 +498,16 @@
             :key="image.id" 
             class="border rounded-lg overflow-hidden bg-white shadow-sm"
           >
-            <img 
-              :src="apiStorage + '/' + image.url_image" 
-              :alt="selectedProduct.name"
-              class="w-full h-40 object-cover"
-            />
+            <div 
+              class="aspect-square cursor-pointer"
+              @click="openImagePreview(image)"
+            >
+              <img 
+                :src="apiStorage + '/' + image.url_image" 
+                :alt="selectedProduct.name"
+                class="w-full h-full object-contain"
+              />
+            </div>
             <div class="p-3 flex justify-between items-center">
               <Tag 
                 :value="image.state ? 'Activa' : 'Inactiva'" 
@@ -535,8 +568,15 @@
         </div>
         
         <div v-if="newImagesPreviews.length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-          <div v-for="(preview, index) in newImagesPreviews" :key="index" class="relative">
-            <img :src="preview" alt="Vista previa" class="w-full h-32 object-cover rounded" />
+          <div 
+            v-for="(preview, index) in newImagesPreviews" 
+            :key="index" 
+            class="relative cursor-pointer"
+            @click="openPreviewImageDialog(preview)"
+          >
+            <div class="aspect-square overflow-hidden rounded">
+              <img :src="preview" alt="Vista previa" class="w-full h-full object-contain" />
+            </div>
           </div>
         </div>
         
@@ -570,19 +610,18 @@
           <Column header="Presentación" style="width: 30%">
             <template #body="slotProps">
               <div>
-                <p class="font-semibold">{{ slotProps.data.amount }} {{ slotProps.data.unit_measurement.abbreviation }}</p>
-                <p class="text-sm text-gray-500">{{ slotProps.data.unit_measurement.name }}</p>
+                <p class="font-semibold">{{ slotProps.data.amount }} {{ slotProps.data.unit_measurement.abbreviation ?? slotProps.data.unit_measurement }}</p>
               </div>
             </template>
           </Column>
           <Column header="Stock" style="width: 15%">
             <template #body="slotProps">
-              {{ getProductPresentationStock(selectedProduct.id, slotProps.data.id) }}
+              {{ slotProps.data.stock }}
             </template>
           </Column>
           <Column header="Precio Unitario" style="width: 15%">
             <template #body="slotProps">
-              {{ formatCurrency(getProductPresentationPrice(selectedProduct.id, slotProps.data.id)) }}
+              {{ formatCurrency(Number.parseFloat(slotProps.data.unit_price)) }}
             </template>
           </Column>
           <Column header="Acciones" style="width: 15%">
@@ -657,8 +696,8 @@
               class="w-full"
               :min="0"
               mode="currency"
-              currency="PEN"
-              locale="es-PE"
+              currency="USD"
+              locale="es-SV"
               :class="{ 'p-invalid': presentationSubmitted && presentationForm.unit_price === null }"
             />
             <small class="p-error" v-if="presentationSubmitted && presentationForm.unit_price === null">
@@ -671,6 +710,24 @@
           <Button label="Cancelar" icon="pi pi-times" class="p-button-text" @click="hidePresentationDialog" />
           <Button label="Guardar" icon="pi pi-check" @click="savePresentation" />
         </div>
+      </div>
+    </Dialog>
+
+    <!-- Diálogo de Vista Previa de Imagen -->
+    <Dialog
+      v-model:visible="imagePreviewDialog"
+      :header="imagePreviewTitle"
+      :modal="true"
+      :style="{ width: '80vw', maxWidth: '90rem' }"
+      :maximizable="true"
+      class="image-preview-dialog"
+    >
+      <div class="flex justify-center items-center p-4">
+        <img 
+          :src="previewImageSrc" 
+          :alt="imagePreviewTitle"
+          class="max-w-full max-h-[70vh] object-contain"
+        />
       </div>
     </Dialog>
 
@@ -698,7 +755,7 @@ import ConfirmDialog from 'primevue/confirmdialog'
 import type { Product, ProductImage } from '@/services/products/interfaces/product-response.interface'
 import type { CreateProduct, UpdateProduct, PresentationInput } from '@/services/products/interfaces/product-request.interface'
 import type { CreateProductImage } from '@/services/products/interfaces/product-image-request.interface'
-import type { CreateProductPresentation, UpdateProductPresentation } from '@/services/products/interfaces/product-presentation-request.interface'
+import type { CreateProductPresentation, UpdateProductPresentation } from '@/services/products/product-presentation-request.interface'
 import type { Presentation } from '@/services/presentations/interfaces/presentation-response.interface'
 import type { CategoryProduct, QualityProduct } from '@/services/catalogs/interfaces/catalogs-response.interface'
 import type { Manufacturer } from '@/services/manufacturers/interfaces/manufacturer-response.interface'
@@ -727,6 +784,7 @@ const imagesDialog = ref(false)
 const addImagesDialog = ref(false)
 const presentationsDialog = ref(false)
 const presentationDialog = ref(false)
+const imagePreviewDialog = ref(false)
 const submitted = ref(false)
 const newImagesSubmitted = ref(false)
 const presentationSubmitted = ref(false)
@@ -738,11 +796,15 @@ const selectedPresentation = ref<Presentation | null>(null)
 const imagesPreviews = ref<string[]>([])
 const newImages = ref<File[]>([])
 const newImagesPreviews = ref<string[]>([])
+const previewImageSrc = ref<string>('')
+const imagePreviewTitle = ref<string>('Vista previa de imagen')
 
 const stateOptions = [
   { label: 'Activo', value: true },
   { label: 'Inactivo', value: false }
 ]
+
+const apiStorage = import.meta.env.VITE_VUE_APP_API_STORAGE
 
 const params = reactive<GetProductParams>({
   name: '',
@@ -754,8 +816,6 @@ const params = reactive<GetProductParams>({
   page: 1,
   per_page: 5
 })
-
-const apiStorage = import.meta.env.VITE_VUE_APP_API_STORAGE
 
 const productForm = reactive<{
   name: string
@@ -788,13 +848,6 @@ const presentationForm = reactive<{
   stock: null,
   unit_price: null
 })
-
-const productPresentations = ref<{
-  productId: number
-  presentationId: number
-  stock: number
-  unitPrice: number
-}[]>([])
 
 const loadCategories = async () => {
   try {
@@ -860,19 +913,6 @@ const loadProducts = async (page = 1) => {
     const response = await productService.getAll(params)
     products.value = response.data
     totalRecords.value = response.meta.total
-    
-    const presentationsData: typeof productPresentations.value = []
-    products.value.forEach(product => {
-      product.presentations.forEach(presentation => {
-        presentationsData.push({
-          productId: product.id,
-          presentationId: presentation.id,
-          stock: Math.floor(Math.random() * 100), // Valor de ejemplo
-          unitPrice: Math.random() * 100 + 10 // Valor de ejemplo
-        })
-      })
-    })
-    productPresentations.value = presentationsData
   } catch (error) {
     toast.add({
       severity: 'error',
@@ -906,24 +946,10 @@ const availablePresentationsForProduct = computed(() => {
 
 const formatCurrency = (value: number | null | undefined) => {
   if (value === null || value === undefined) return 'N/A'
-  return value.toLocaleString('es-PE', {
+  return value.toLocaleString('es-SV', {
     style: 'currency',
-    currency: 'PEN'
+    currency: 'USD'
   })
-}
-
-const getProductPresentationStock = (productId: number, presentationId: number) => {
-  const found = productPresentations.value.find(
-    pp => pp.productId === productId && pp.presentationId === presentationId
-  )
-  return found ? found.stock : 'N/A'
-}
-
-const getProductPresentationPrice = (productId: number, presentationId: number) => {
-  const found = productPresentations.value.find(
-    pp => pp.productId === productId && pp.presentationId === presentationId
-  )
-  return found ? found.unitPrice : 0
 }
 
 const onPage = (event: DataTablePageEvent) => {
@@ -962,6 +988,18 @@ const clearFilters = () => {
   params.category_product_id = undefined
   params.quality_product_id = undefined
   loadProducts()
+}
+
+const openImagePreview = (image: ProductImage) => {
+  previewImageSrc.value = apiStorage + '/' + image.url_image
+  imagePreviewTitle.value = 'Vista previa de imagen'
+  imagePreviewDialog.value = true
+}
+
+const openPreviewImageDialog = (imageSrc: string) => {
+  previewImageSrc.value = imageSrc
+  imagePreviewTitle.value = 'Vista previa de imagen'
+  imagePreviewDialog.value = true
 }
 
 const viewProductDetails = (product: Product) => {
@@ -1308,12 +1346,8 @@ const openEditPresentationDialog = (presentation: Presentation) => {
   presentationForm.product_id = selectedProduct.value.id
   presentationForm.presentation_id = presentation.id
   
-  const productPresentation = productPresentations.value.find(
-    pp => pp.productId === selectedProduct.value?.id && pp.presentationId === presentation.id
-  )
-  
-  presentationForm.stock = productPresentation?.stock || null
-  presentationForm.unit_price = productPresentation?.unitPrice || null
+  presentationForm.stock = presentation.stock ? Number(presentation.stock) : null
+  presentationForm.unit_price = presentation.unit_price ? Number(presentation.unit_price) : null
   
   presentationSubmitted.value = false
   presentationDialogMode.value = 'edit'
@@ -1350,17 +1384,16 @@ const savePresentation = async () => {
       if (selectedProduct.value) {
         const presentation = allPresentations.value.find(p => p.id === presentationForm.presentation_id)
         if (presentation) {
-          selectedProduct.value.presentations.push(presentation)
-          
-          productPresentations.value.push({
-            productId: presentationForm.product_id,
-            presentationId: presentationForm.presentation_id!,
+          const newPresentation = { 
+            ...presentation,
             stock: presentationForm.stock,
-            unitPrice: presentationForm.unit_price
-          })
+            unit_price: presentationForm.unit_price
+          }
+          
+          selectedProduct.value.presentations.push(newPresentation)
         }
       }
-    } else if (selectedPresentation.value) {
+    } else if (selectedPresentation.value && selectedProduct.value) {
       const requestData: UpdateProductPresentation = {
         stock: presentationForm.stock,
         unit_price: presentationForm.unit_price
@@ -1373,13 +1406,10 @@ const savePresentation = async () => {
       )
       toast.add({ severity: 'success', summary: 'Éxito', detail: 'Presentación actualizada', life: 3000 })
       
-      const index = productPresentations.value.findIndex(
-        pp => pp.productId === presentationForm.product_id && pp.presentationId === selectedPresentation.value?.id
-      )
-      
+      const index = selectedProduct.value.presentations.findIndex(p => p.id === selectedPresentation.value?.id)
       if (index !== -1) {
-        productPresentations.value[index].stock = presentationForm.stock
-        productPresentations.value[index].unitPrice = presentationForm.unit_price
+        selectedProduct.value.presentations[index].stock = presentationForm.stock
+        selectedProduct.value.presentations[index].unit_price = presentationForm.unit_price
       }
     }
     
@@ -1411,10 +1441,6 @@ const deletePresentation = async (productId: number, presentationId: number) => 
     
     if (selectedProduct.value) {
       selectedProduct.value.presentations = selectedProduct.value.presentations.filter(p => p.id !== presentationId)
-      
-      productPresentations.value = productPresentations.value.filter(
-        pp => !(pp.productId === productId && pp.presentationId === presentationId)
-      )
     }
     
     toast.add({ severity: 'success', summary: 'Éxito', detail: 'Presentación eliminada', life: 3000 })
@@ -1452,5 +1478,17 @@ img.max-w-xs {
 
 :deep(.p-button-sm .pi) {
   font-size: 0.875rem;
+}
+
+:deep(.image-preview-dialog .p-dialog-content) {
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
 }
 </style>
