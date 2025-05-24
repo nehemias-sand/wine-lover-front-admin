@@ -5,7 +5,7 @@
       <img
         src="../../../public/wine-lovers.png"
         alt="Logo Universidad"
-        class="w-full object-contain"
+        class="w-full h-[120px] object-contain"
       />
     </div>
 

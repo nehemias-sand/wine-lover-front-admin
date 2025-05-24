@@ -4,7 +4,7 @@
       <img
         src="../../../public/wine-lovers-banner.png"
         alt="Wine Lovers"
-        class="w-full h-[540px] object-cover "
+        class="w-full h-full object-cover "
       />
     </section>
 </template>
