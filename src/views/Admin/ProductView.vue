@@ -487,7 +487,7 @@
                   mode="advanced"
                   multiple
                   accept="image/*"
-                  :maxFileSize="1000000"
+                  :maxFileSize="5000000"
                   @select="onImagesSelect"
                   @remove="onImageRemove"
                   @clear="onImagesClear"
