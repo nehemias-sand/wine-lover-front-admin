@@ -10,25 +10,30 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         <div>
           <label for="name" class="block text-sm font-medium mb-1">Nombre</label>
-          <InputText id="name" v-model="params.name" class="w-full" placeholder="Buscar por nombre" />
+          <InputText
+            id="name"
+            v-model="params.name"
+            class="w-full"
+            placeholder="Buscar por nombre"
+          />
         </div>
-        
+
         <div>
           <label class="block text-sm font-medium mb-1">Rango de Precio</label>
           <div class="flex gap-3">
-            <InputNumber 
-              v-model="params.min_price" 
-              placeholder="Mínimo" 
-              class="w-full" 
+            <InputNumber
+              v-model="params.min_price"
+              placeholder="Mínimo"
+              class="w-full"
               :min="0"
               mode="currency"
               currency="USD"
               locale="es-SV"
             />
-            <InputNumber 
-              v-model="params.max_price" 
-              placeholder="Máximo" 
-              class="w-full" 
+            <InputNumber
+              v-model="params.max_price"
+              placeholder="Máximo"
+              class="w-full"
               :min="0"
               mode="currency"
               currency="USD"
@@ -36,7 +41,7 @@
             />
           </div>
         </div>
-        
+
         <div>
           <label for="category" class="block text-sm font-medium mb-1">Categoría</label>
           <Dropdown
@@ -49,7 +54,7 @@
             class="w-full"
           />
         </div>
-        
+
         <div>
           <label for="quality" class="block text-sm font-medium mb-1">Calidad</label>
           <Dropdown
@@ -62,10 +67,15 @@
             class="w-full"
           />
         </div>
-        
+
         <div class="flex items-end">
           <Button label="Aplicar Filtros" icon="pi pi-filter" @click="applyFilters" class="mr-2" />
-          <Button label="Limpiar" icon="pi pi-times" @click="clearFilters" class="p-button-outlined" />
+          <Button
+            label="Limpiar"
+            icon="pi pi-times"
+            @click="clearFilters"
+            class="p-button-outlined"
+          />
         </div>
       </div>
     </div>
@@ -90,13 +100,13 @@
       <Column field="id" header="ID" sortable style="width: 5%"></Column>
       <Column header="Imagen" style="width: 10%">
         <template #body="slotProps">
-          <div 
+          <div
             v-if="slotProps.data.images && slotProps.data.images.length > 0"
             class="w-16 h-16 relative cursor-pointer"
             @click="openImagePreview(slotProps.data.images[0])"
           >
-            <img 
-              :src="apiStorage + '/' + slotProps.data.images[0].url_image" 
+            <img
+              :src="apiStorage + '/' + slotProps.data.images[0].url_image"
               :alt="slotProps.data.name"
               class="w-full h-full object-contain rounded"
             />
@@ -112,8 +122,8 @@
       <Column field="manufacturer.name" header="Fabricante" sortable style="width: 15%"></Column>
       <Column field="state" header="Estado" sortable style="width: 10%">
         <template #body="slotProps">
-          <Tag 
-            :value="slotProps.data.state ? 'Activo' : 'Inactivo'" 
+          <Tag
+            :value="slotProps.data.state ? 'Activo' : 'Inactivo'"
             :severity="slotProps.data.state ? 'success' : 'danger'"
           />
         </template>
@@ -169,22 +179,25 @@
           <!-- Galería de imágenes -->
           <div>
             <h3 class="text-lg font-semibold mb-3">Imágenes</h3>
-            <div v-if="selectedProduct.images && selectedProduct.images.length > 0" class="grid grid-cols-2 gap-2">
-              <div 
-                v-for="image in selectedProduct.images" 
-                :key="image.id" 
+            <div
+              v-if="selectedProduct.images && selectedProduct.images.length > 0"
+              class="grid grid-cols-2 gap-2"
+            >
+              <div
+                v-for="image in selectedProduct.images"
+                :key="image.id"
                 class="relative cursor-pointer"
                 @click="openImagePreview(image)"
               >
                 <div class="aspect-square overflow-hidden rounded-lg shadow-sm">
-                  <img 
-                    :src="apiStorage + '/' + image.url_image" 
+                  <img
+                    :src="apiStorage + '/' + image.url_image"
                     :alt="selectedProduct.name"
                     class="w-full h-full object-contain"
                   />
                 </div>
-                <Tag 
-                  :value="image.state ? 'Activa' : 'Inactiva'" 
+                <Tag
+                  :value="image.state ? 'Activa' : 'Inactiva'"
                   :severity="image.state ? 'success' : 'danger'"
                   class="absolute top-2 right-2"
                 />
@@ -195,7 +208,7 @@
               <p class="text-gray-500">No hay imágenes disponibles</p>
             </div>
           </div>
-          
+
           <!-- Información del producto -->
           <div>
             <h3 class="text-lg font-semibold mb-3">Información General</h3>
@@ -215,14 +228,14 @@
                 </div>
                 <div>
                   <p class="text-sm text-gray-500">Estado</p>
-                  <Tag 
-                    :value="selectedProduct.state ? 'Activo' : 'Inactivo'" 
+                  <Tag
+                    :value="selectedProduct.state ? 'Activo' : 'Inactivo'"
                     :severity="selectedProduct.state ? 'success' : 'danger'"
                   />
                 </div>
               </div>
             </div>
-            
+
             <div class="mt-4">
               <h4 class="font-medium mb-2">Descripción</h4>
               <p class="bg-white p-3 rounded-lg border border-gray-200 whitespace-pre-line">
@@ -231,7 +244,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Presentaciones -->
         <div>
           <h3 class="text-lg font-semibold mb-3">Presentaciones</h3>
@@ -245,7 +258,9 @@
             <Column header="Presentación" style="width: 30%">
               <template #body="slotProps">
                 <div>
-                  <p class="font-semibold">{{ slotProps.data.amount }} {{ slotProps.data.unit_measurement.abbreviation }}</p>
+                  <p class="font-semibold">
+                    {{ slotProps.data.amount }} {{ slotProps.data.unit_measurement.abbreviation }}
+                  </p>
                   <p class="text-sm text-gray-500">{{ slotProps.data.unit_measurement.name }}</p>
                 </div>
               </template>
@@ -285,9 +300,11 @@
                   class="w-full"
                   :class="{ 'p-invalid': submitted && !productForm.name }"
                 />
-                <small class="p-error" v-if="submitted && !productForm.name">El nombre es requerido.</small>
+                <small class="p-error" v-if="submitted && !productForm.name"
+                  >El nombre es requerido.</small
+                >
               </div>
-              
+
               <div>
                 <label for="product_state" class="block text-sm font-medium mb-1">Estado</label>
                 <Dropdown
@@ -300,11 +317,15 @@
                   class="w-full"
                   :class="{ 'p-invalid': submitted && productForm.state === undefined }"
                 />
-                <small class="p-error" v-if="submitted && productForm.state === undefined">El estado es requerido.</small>
+                <small class="p-error" v-if="submitted && productForm.state === undefined"
+                  >El estado es requerido.</small
+                >
               </div>
-              
+
               <div>
-                <label for="product_category" class="block text-sm font-medium mb-1">Categoría</label>
+                <label for="product_category" class="block text-sm font-medium mb-1"
+                  >Categoría</label
+                >
                 <Dropdown
                   id="product_category"
                   v-model="productForm.category_product_id"
@@ -315,9 +336,11 @@
                   class="w-full"
                   :class="{ 'p-invalid': submitted && !productForm.category_product_id }"
                 />
-                <small class="p-error" v-if="submitted && !productForm.category_product_id">La categoría es requerida.</small>
+                <small class="p-error" v-if="submitted && !productForm.category_product_id"
+                  >La categoría es requerida.</small
+                >
               </div>
-              
+
               <div>
                 <label for="product_quality" class="block text-sm font-medium mb-1">Calidad</label>
                 <Dropdown
@@ -330,11 +353,15 @@
                   class="w-full"
                   :class="{ 'p-invalid': submitted && !productForm.quality_product_id }"
                 />
-                <small class="p-error" v-if="submitted && !productForm.quality_product_id">La calidad es requerida.</small>
+                <small class="p-error" v-if="submitted && !productForm.quality_product_id"
+                  >La calidad es requerida.</small
+                >
               </div>
-              
+
               <div>
-                <label for="product_manufacturer" class="block text-sm font-medium mb-1">Fabricante</label>
+                <label for="product_manufacturer" class="block text-sm font-medium mb-1"
+                  >Fabricante</label
+                >
                 <Dropdown
                   id="product_manufacturer"
                   v-model="productForm.manufacturer_id"
@@ -345,12 +372,16 @@
                   class="w-full"
                   :class="{ 'p-invalid': submitted && !productForm.manufacturer_id }"
                 />
-                <small class="p-error" v-if="submitted && !productForm.manufacturer_id">El fabricante es requerido.</small>
+                <small class="p-error" v-if="submitted && !productForm.manufacturer_id"
+                  >El fabricante es requerido.</small
+                >
               </div>
             </div>
-            
+
             <div class="mb-4">
-              <label for="product_description" class="block text-sm font-medium mb-1">Descripción</label>
+              <label for="product_description" class="block text-sm font-medium mb-1"
+                >Descripción</label
+              >
               <Textarea
                 id="product_description"
                 v-model.trim="productForm.description"
@@ -358,18 +389,24 @@
                 class="w-full"
                 :class="{ 'p-invalid': submitted && !productForm.description }"
               />
-              <small class="p-error" v-if="submitted && !productForm.description">La descripción es requerida.</small>
+              <small class="p-error" v-if="submitted && !productForm.description"
+                >La descripción es requerida.</small
+              >
             </div>
           </TabPanel>
-          
+
           <!-- Presentaciones (solo para nuevo producto) -->
           <TabPanel header="Presentaciones" :disabled="dialogMode !== 'new'">
             <div v-if="dialogMode === 'new'">
               <div class="mb-4 flex justify-between items-center">
                 <h3 class="text-lg font-semibold">Presentaciones del Producto</h3>
-                <Button label="Agregar Presentación" icon="pi pi-plus" @click="addPresentationRow" />
+                <Button
+                  label="Agregar Presentación"
+                  icon="pi pi-plus"
+                  @click="addPresentationRow"
+                />
               </div>
-              
+
               <div v-if="productForm.presentations.length > 0">
                 <div class="grid grid-cols-12 gap-2 font-semibold mb-2 bg-gray-100 p-2 rounded">
                   <div class="col-span-5">Presentación</div>
@@ -377,9 +414,9 @@
                   <div class="col-span-3">Precio Unitario</div>
                   <div class="col-span-1">Acciones</div>
                 </div>
-                
-                <div 
-                  v-for="(presentation, index) in productForm.presentations" 
+
+                <div
+                  v-for="(presentation, index) in productForm.presentations"
                   :key="index"
                   class="grid grid-cols-12 gap-2 items-center mb-2 p-2 border-b"
                 >
@@ -425,21 +462,28 @@
                 </div>
               </div>
               <div v-else class="text-center p-4 bg-gray-50 rounded">
-                <p class="text-gray-500">No hay presentaciones agregadas. Haga clic en "Agregar Presentación" para comenzar.</p>
+                <p class="text-gray-500">
+                  No hay presentaciones agregadas. Haga clic en "Agregar Presentación" para
+                  comenzar.
+                </p>
               </div>
-              
-              <small class="p-error block mt-2" v-if="submitted && productForm.presentations.length === 0">
+
+              <small
+                class="p-error block mt-2"
+                v-if="submitted && productForm.presentations.length === 0"
+              >
                 Debe agregar al menos una presentación.
               </small>
             </div>
           </TabPanel>
-          
+
           <!-- Imágenes (solo para nuevo producto) -->
           <TabPanel header="Imágenes" :disabled="dialogMode !== 'new'">
             <div v-if="dialogMode === 'new'">
               <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Imágenes del Producto</label>
                 <FileUpload
+                  ref="fileUploadRef"
                   mode="advanced"
                   multiple
                   accept="image/*"
@@ -447,33 +491,55 @@
                   @select="onImagesSelect"
                   @remove="onImageRemove"
                   @clear="onImagesClear"
-                  :auto="true"
+                  :auto="false"
                   chooseLabel="Seleccionar Imágenes"
+                  uploadLabel="Subir"
+                  cancelLabel="Cancelar"
                   class="w-full"
+                  :showUploadButton="false"
+                  :showCancelButton="false"
                 />
                 <small class="p-error" v-if="submitted && productForm.images.length === 0">
                   Debe agregar al menos una imagen.
                 </small>
               </div>
-              
-              <div v-if="imagesPreviews.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-                <div 
-                  v-for="(preview, index) in imagesPreviews" 
-                  :key="index" 
-                  class="relative cursor-pointer"
-                  @click="openPreviewImageDialog(preview)"
+
+              <div
+                v-if="imagesPreviews.length > 0"
+                class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4"
+              >
+                <div
+                  v-for="(preview, index) in imagesPreviews"
+                  :key="`preview-${index}`"
+                  class="relative cursor-pointer group"
                 >
-                  <div class="aspect-square overflow-hidden rounded">
-                    <img :src="preview" alt="Vista previa" class="w-full h-full object-contain" />
+                  <div class="aspect-square overflow-hidden rounded border-2 border-gray-200">
+                    <img
+                      :src="preview"
+                      alt="Vista previa"
+                      class="w-full h-full object-contain"
+                      @click="openPreviewImageDialog(preview)"
+                    />
                   </div>
+                  <Button
+                    icon="pi pi-times"
+                    class="p-button-rounded p-button-danger p-button-sm absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                    @click="removeImagePreview(index)"
+                    v-tooltip.top="'Eliminar imagen'"
+                  />
                 </div>
               </div>
             </div>
           </TabPanel>
         </TabView>
-        
+
         <div class="flex justify-end gap-2 mt-6">
-          <Button label="Cancelar" icon="pi pi-times" class="p-button-text" @click="hideProductDialog" />
+          <Button
+            label="Cancelar"
+            icon="pi pi-times"
+            class="p-button-text"
+            @click="hideProductDialog"
+          />
           <Button label="Guardar" icon="pi pi-check" @click="saveProduct" />
         </div>
       </div>
@@ -491,26 +557,26 @@
           <h3 class="text-lg font-semibold">Imágenes Actuales</h3>
           <Button label="Agregar Imágenes" icon="pi pi-plus" @click="openAddImagesDialog" />
         </div>
-        
-        <div v-if="selectedProduct.images && selectedProduct.images.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div 
-            v-for="image in selectedProduct.images" 
-            :key="image.id" 
+
+        <div
+          v-if="selectedProduct.images && selectedProduct.images.length > 0"
+          class="grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
+          <div
+            v-for="image in selectedProduct.images"
+            :key="image.id"
             class="border rounded-lg overflow-hidden bg-white shadow-sm"
           >
-            <div 
-              class="aspect-square cursor-pointer"
-              @click="openImagePreview(image)"
-            >
-              <img 
-                :src="apiStorage + '/' + image.url_image" 
+            <div class="aspect-square cursor-pointer" @click="openImagePreview(image)">
+              <img
+                :src="apiStorage + '/' + image.url_image"
                 :alt="selectedProduct.name"
                 class="w-full h-full object-contain"
               />
             </div>
             <div class="p-3 flex justify-between items-center">
-              <Tag 
-                :value="image.state ? 'Activa' : 'Inactiva'" 
+              <Tag
+                :value="image.state ? 'Activa' : 'Inactiva'"
                 :severity="image.state ? 'success' : 'danger'"
               />
               <div class="flex gap-1">
@@ -551,6 +617,7 @@
         <div class="mb-4">
           <label class="block text-sm font-medium mb-2">Seleccione Imágenes</label>
           <FileUpload
+            ref="newFileUploadRef"
             mode="advanced"
             multiple
             accept="image/*"
@@ -558,30 +625,49 @@
             @select="onNewImagesSelect"
             @remove="onNewImageRemove"
             @clear="onNewImagesClear"
-            :auto="true"
+            :auto="false"
             chooseLabel="Seleccionar Imágenes"
+            uploadLabel="Subir"
+            cancelLabel="Cancelar"
             class="w-full"
+            :showUploadButton="false"
+            :showCancelButton="false"
           />
           <small class="p-error" v-if="newImagesSubmitted && newImages.length === 0">
             Debe seleccionar al menos una imagen.
           </small>
         </div>
-        
+
         <div v-if="newImagesPreviews.length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-          <div 
-            v-for="(preview, index) in newImagesPreviews" 
-            :key="index" 
-            class="relative cursor-pointer"
-            @click="openPreviewImageDialog(preview)"
+          <div
+            v-for="(preview, index) in newImagesPreviews"
+            :key="`new-preview-${index}`"
+            class="relative cursor-pointer group"
           >
-            <div class="aspect-square overflow-hidden rounded">
-              <img :src="preview" alt="Vista previa" class="w-full h-full object-contain" />
+            <div class="aspect-square overflow-hidden rounded border-2 border-gray-200">
+              <img
+                :src="preview"
+                alt="Vista previa"
+                class="w-full h-full object-contain"
+                @click="openPreviewImageDialog(preview)"
+              />
             </div>
+            <Button
+              icon="pi pi-times"
+              class="p-button-rounded p-button-danger p-button-sm absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              @click="removeNewImagePreview(index)"
+              v-tooltip.top="'Eliminar imagen'"
+            />
           </div>
         </div>
-        
+
         <div class="flex justify-end gap-2 mt-6">
-          <Button label="Cancelar" icon="pi pi-times" class="p-button-text" @click="hideAddImagesDialog" />
+          <Button
+            label="Cancelar"
+            icon="pi pi-times"
+            class="p-button-text"
+            @click="hideAddImagesDialog"
+          />
           <Button label="Guardar Imágenes" icon="pi pi-check" @click="saveImages" />
         </div>
       </div>
@@ -597,9 +683,13 @@
       <div v-if="selectedProduct" class="p-4">
         <div class="mb-4 flex justify-between items-center">
           <h3 class="text-lg font-semibold">Presentaciones Actuales</h3>
-          <Button label="Agregar Presentación" icon="pi pi-plus" @click="openAddPresentationDialog" />
+          <Button
+            label="Agregar Presentación"
+            icon="pi pi-plus"
+            @click="openAddPresentationDialog"
+          />
         </div>
-        
+
         <DataTable
           :value="selectedProduct.presentations"
           responsiveLayout="scroll"
@@ -610,7 +700,12 @@
           <Column header="Presentación" style="width: 30%">
             <template #body="slotProps">
               <div>
-                <p class="font-semibold">{{ slotProps.data.amount }} {{ slotProps.data.unit_measurement.abbreviation ?? slotProps.data.unit_measurement }}</p>
+                <p class="font-semibold">
+                  {{ slotProps.data.amount }}
+                  {{
+                    slotProps.data.unit_measurement.abbreviation ?? slotProps.data.unit_measurement
+                  }}
+                </p>
               </div>
             </template>
           </Column>
@@ -667,11 +762,14 @@
               class="w-full"
               :class="{ 'p-invalid': presentationSubmitted && !presentationForm.presentation_id }"
             />
-            <small class="p-error" v-if="presentationSubmitted && !presentationForm.presentation_id">
+            <small
+              class="p-error"
+              v-if="presentationSubmitted && !presentationForm.presentation_id"
+            >
               La presentación es requerida.
             </small>
           </div>
-          
+
           <div>
             <label for="presentation_stock" class="block text-sm font-medium mb-1">Stock</label>
             <InputNumber
@@ -686,9 +784,11 @@
               El stock es requerido.
             </small>
           </div>
-          
+
           <div>
-            <label for="presentation_price" class="block text-sm font-medium mb-1">Precio Unitario</label>
+            <label for="presentation_price" class="block text-sm font-medium mb-1"
+              >Precio Unitario</label
+            >
             <InputNumber
               id="presentation_price"
               v-model="presentationForm.unit_price"
@@ -698,16 +798,26 @@
               mode="currency"
               currency="USD"
               locale="es-SV"
-              :class="{ 'p-invalid': presentationSubmitted && presentationForm.unit_price === null }"
+              :class="{
+                'p-invalid': presentationSubmitted && presentationForm.unit_price === null
+              }"
             />
-            <small class="p-error" v-if="presentationSubmitted && presentationForm.unit_price === null">
+            <small
+              class="p-error"
+              v-if="presentationSubmitted && presentationForm.unit_price === null"
+            >
               El precio es requerido.
             </small>
           </div>
         </div>
-        
+
         <div class="flex justify-end gap-2 mt-6">
-          <Button label="Cancelar" icon="pi pi-times" class="p-button-text" @click="hidePresentationDialog" />
+          <Button
+            label="Cancelar"
+            icon="pi pi-times"
+            class="p-button-text"
+            @click="hidePresentationDialog"
+          />
           <Button label="Guardar" icon="pi pi-check" @click="savePresentation" />
         </div>
       </div>
@@ -723,8 +833,8 @@
       class="image-preview-dialog"
     >
       <div class="flex justify-center items-center p-4">
-        <img 
-          :src="previewImageSrc" 
+        <img
+          :src="previewImageSrc"
           :alt="imagePreviewTitle"
           class="max-w-full max-h-[70vh] object-contain"
         />
@@ -752,12 +862,25 @@ import FileUpload from 'primevue/fileupload'
 import TabView from 'primevue/tabview'
 import TabPanel from 'primevue/tabpanel'
 import ConfirmDialog from 'primevue/confirmdialog'
-import type { Product, ProductImage } from '@/services/products/interfaces/product-response.interface'
-import type { CreateProduct, UpdateProduct, PresentationInput } from '@/services/products/interfaces/product-request.interface'
+import type {
+  Product,
+  ProductImage
+} from '@/services/products/interfaces/product-response.interface'
+import type {
+  CreateProduct,
+  UpdateProduct,
+  PresentationInput
+} from '@/services/products/interfaces/product-request.interface'
 import type { CreateProductImage } from '@/services/products/interfaces/product-image-request.interface'
-import type { CreateProductPresentation, UpdateProductPresentation } from '@/services/products/product-presentation-request.interface'
+import type {
+  CreateProductPresentation,
+  UpdateProductPresentation
+} from '@/services/products/product-presentation-request.interface'
 import type { Presentation } from '@/services/presentations/interfaces/presentation-response.interface'
-import type { CategoryProduct, QualityProduct } from '@/services/catalogs/interfaces/catalogs-response.interface'
+import type {
+  CategoryProduct,
+  QualityProduct
+} from '@/services/catalogs/interfaces/catalogs-response.interface'
 import type { Manufacturer } from '@/services/manufacturers/interfaces/manufacturer-response.interface'
 import * as productService from '@/services/products/product.service'
 import * as productImageService from '@/services/products/product-image.service'
@@ -778,6 +901,11 @@ const allPresentations = ref<Presentation[]>([])
 const totalRecords = ref(0)
 const loading = ref(false)
 
+// Referencias a los componentes FileUpload
+const fileUploadRef = ref()
+const newFileUploadRef = ref()
+
+// Diálogos
 const productDetailsDialog = ref(false)
 const productDialog = ref(false)
 const imagesDialog = ref(false)
@@ -791,6 +919,7 @@ const presentationSubmitted = ref(false)
 const dialogMode = ref<'new' | 'edit'>('new')
 const presentationDialogMode = ref<'new' | 'edit'>('new')
 
+// Elementos seleccionados
 const selectedProduct = ref<Product | null>(null)
 const selectedPresentation = ref<Presentation | null>(null)
 const imagesPreviews = ref<string[]>([])
@@ -926,7 +1055,7 @@ const loadProducts = async (page = 1) => {
 }
 
 const availablePresentations = computed(() => {
-  return allPresentations.value.map(p => ({
+  return allPresentations.value.map((p) => ({
     id: p.id,
     label: `${p.amount} ${p.unit_measurement.abbreviation} (${p.unit_measurement.name})`
   }))
@@ -934,11 +1063,11 @@ const availablePresentations = computed(() => {
 
 const availablePresentationsForProduct = computed(() => {
   if (!selectedProduct.value) return []
-  
-  const existingPresentationIds = selectedProduct.value.presentations.map(p => p.id)
+
+  const existingPresentationIds = selectedProduct.value.presentations.map((p) => p.id)
   return allPresentations.value
-    .filter(p => !existingPresentationIds.includes(p.id))
-    .map(p => ({
+    .filter((p) => !existingPresentationIds.includes(p.id))
+    .map((p) => ({
       id: p.id,
       label: `${p.amount} ${p.unit_measurement.abbreviation} (${p.unit_measurement.name})`
     }))
@@ -957,8 +1086,10 @@ const onPage = (event: DataTablePageEvent) => {
 }
 
 const applyFilters = () => {
-  if ((params.min_price !== undefined && params.max_price === undefined) || 
-      (params.min_price === undefined && params.max_price !== undefined)) {
+  if (
+    (params.min_price !== undefined && params.max_price === undefined) ||
+    (params.min_price === undefined && params.max_price !== undefined)
+  ) {
     toast.add({
       severity: 'warn',
       summary: 'Advertencia',
@@ -967,8 +1098,12 @@ const applyFilters = () => {
     })
     return
   }
-  
-  if (params.min_price !== undefined && params.max_price !== undefined && params.min_price > params.max_price) {
+
+  if (
+    params.min_price !== undefined &&
+    params.max_price !== undefined &&
+    params.min_price > params.max_price
+  ) {
     toast.add({
       severity: 'warn',
       summary: 'Advertencia',
@@ -977,7 +1112,7 @@ const applyFilters = () => {
     })
     return
   }
-  
+
   loadProducts()
 }
 
@@ -990,6 +1125,7 @@ const clearFilters = () => {
   loadProducts()
 }
 
+// Vista previa de imágenes
 const openImagePreview = (image: ProductImage) => {
   previewImageSrc.value = apiStorage + '/' + image.url_image
   imagePreviewTitle.value = 'Vista previa de imagen'
@@ -1041,26 +1177,36 @@ const openEditProductDialog = (product: Product) => {
 const hideProductDialog = () => {
   productDialog.value = false
   submitted.value = false
+  // Limpiar el componente FileUpload
+  if (fileUploadRef.value) {
+    fileUploadRef.value.clear()
+  }
 }
 
+// Manejo mejorado de imágenes para nuevo producto
 const onImagesSelect = (event: any) => {
   const files = event.files
-  if (files) {
-    for (let file of files) {
+  if (files && files.length > 0) {
+    // Agregar archivos al array
+    files.forEach((file: File) => {
       productForm.images.push(file)
-      
+
+      // Crear vista previa
       const reader = new FileReader()
       reader.onload = (e) => {
         imagesPreviews.value.push(e.target?.result as string)
       }
       reader.readAsDataURL(file)
-    }
+    })
   }
 }
 
 const onImageRemove = (event: any) => {
   const file = event.file
-  const index = productForm.images.findIndex(f => f.name === file.name && f.size === file.size)
+  const index = productForm.images.findIndex(
+    (f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified
+  )
+
   if (index !== -1) {
     productForm.images.splice(index, 1)
     imagesPreviews.value.splice(index, 1)
@@ -1070,6 +1216,22 @@ const onImageRemove = (event: any) => {
 const onImagesClear = () => {
   productForm.images = []
   imagesPreviews.value = []
+}
+
+// Función para eliminar imagen desde la vista previa
+const removeImagePreview = (index: number) => {
+  if (index >= 0 && index < productForm.images.length) {
+    productForm.images.splice(index, 1)
+    imagesPreviews.value.splice(index, 1)
+
+    // Actualizar el componente FileUpload
+    if (fileUploadRef.value) {
+      // Recrear la lista de archivos en el componente
+      const dt = new DataTransfer()
+      productForm.images.forEach((file) => dt.items.add(file))
+      fileUploadRef.value.files = dt.files
+    }
+  }
 }
 
 const addPresentationRow = () => {
@@ -1087,20 +1249,26 @@ const removePresentationRow = (index: number) => {
 const saveProduct = async () => {
   submitted.value = true
 
-  if (!productForm.name || !productForm.description || productForm.state === undefined ||
-      !productForm.category_product_id || !productForm.quality_product_id || !productForm.manufacturer_id) {
+  if (
+    !productForm.name ||
+    !productForm.description ||
+    productForm.state === undefined ||
+    !productForm.category_product_id ||
+    !productForm.quality_product_id ||
+    !productForm.manufacturer_id
+  ) {
     return
   }
-  
+
   if (dialogMode.value === 'new') {
     if (productForm.presentations.length === 0) {
       return
     }
-    
+
     if (productForm.images.length === 0) {
       return
     }
-    
+
     for (const presentation of productForm.presentations) {
       if (!presentation.id || presentation.stock === null || presentation.unit_price === null) {
         return
@@ -1120,7 +1288,7 @@ const saveProduct = async () => {
         quality_product_id: productForm.quality_product_id!,
         manufacturer_id: productForm.manufacturer_id!
       }
-      
+
       await productService.create(requestData)
       toast.add({ severity: 'success', summary: 'Éxito', detail: 'Producto creado', life: 3000 })
     } else if (selectedProduct.value) {
@@ -1132,11 +1300,16 @@ const saveProduct = async () => {
         quality_product_id: productForm.quality_product_id!,
         manufacturer_id: productForm.manufacturer_id!
       }
-      
+
       await productService.update(selectedProduct.value.id, requestData)
-      toast.add({ severity: 'success', summary: 'Éxito', detail: 'Producto actualizado', life: 3000 })
+      toast.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Producto actualizado',
+        life: 3000
+      })
     }
-    
+
     productDialog.value = false
     loadProducts()
   } catch (error: any) {
@@ -1188,26 +1361,32 @@ const openAddImagesDialog = () => {
 const hideAddImagesDialog = () => {
   addImagesDialog.value = false
   newImagesSubmitted.value = false
+  if (newFileUploadRef.value) {
+    newFileUploadRef.value.clear()
+  }
 }
 
 const onNewImagesSelect = (event: any) => {
   const files = event.files
-  if (files) {
-    for (let file of files) {
+  if (files && files.length > 0) {
+    files.forEach((file: File) => {
       newImages.value.push(file)
-      
+
       const reader = new FileReader()
       reader.onload = (e) => {
         newImagesPreviews.value.push(e.target?.result as string)
       }
       reader.readAsDataURL(file)
-    }
+    })
   }
 }
 
 const onNewImageRemove = (event: any) => {
   const file = event.file
-  const index = newImages.value.findIndex(f => f.name === file.name && f.size === file.size)
+  const index = newImages.value.findIndex(
+    (f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified
+  )
+
   if (index !== -1) {
     newImages.value.splice(index, 1)
     newImagesPreviews.value.splice(index, 1)
@@ -1219,38 +1398,51 @@ const onNewImagesClear = () => {
   newImagesPreviews.value = []
 }
 
+const removeNewImagePreview = (index: number) => {
+  if (index >= 0 && index < newImages.value.length) {
+    newImages.value.splice(index, 1)
+    newImagesPreviews.value.splice(index, 1)
+
+    if (newFileUploadRef.value) {
+      const dt = new DataTransfer()
+      newImages.value.forEach((file) => dt.items.add(file))
+      newFileUploadRef.value.files = dt.files
+    }
+  }
+}
+
 const saveImages = async () => {
   newImagesSubmitted.value = true
-  
+
   if (newImages.value.length === 0 || !selectedProduct.value) {
     return
   }
-  
+
   try {
     const requestData: CreateProductImage = {
       product_id: selectedProduct.value.id,
       images: newImages.value
     }
-    
+
     await productImageService.create(requestData)
     toast.add({ severity: 'success', summary: 'Éxito', detail: 'Imágenes agregadas', life: 3000 })
-    
-    const updatedProducts = await productService.getAll({ 
+
+    const updatedProducts = await productService.getAll({
       paginate: false,
       page: 1,
       per_page: 1,
       name: selectedProduct.value.name
     })
-    const updatedProduct = updatedProducts.data.find(p => p.id === selectedProduct.value?.id)
+    const updatedProduct = updatedProducts.data.find((p) => p.id === selectedProduct.value?.id)
     if (updatedProduct) {
       selectedProduct.value = updatedProduct
-      
-      const index = products.value.findIndex(p => p.id === updatedProduct.id)
+
+      const index = products.value.findIndex((p) => p.id === updatedProduct.id)
       if (index !== -1) {
         products.value[index] = updatedProduct
       }
     }
-    
+
     addImagesDialog.value = false
   } catch (error) {
     toast.add({
@@ -1265,14 +1457,14 @@ const saveImages = async () => {
 const toggleImageState = async (image: ProductImage) => {
   try {
     await productImageService.changeState(image.id)
-    
+
     if (selectedProduct.value) {
-      const index = selectedProduct.value.images.findIndex(i => i.id === image.id)
+      const index = selectedProduct.value.images.findIndex((i) => i.id === image.id)
       if (index !== -1) {
         selectedProduct.value.images[index].state = !selectedProduct.value.images[index].state
       }
     }
-    
+
     toast.add({
       severity: 'success',
       summary: 'Éxito',
@@ -1301,16 +1493,16 @@ const confirmDeleteImage = (image: ProductImage) => {
 const deleteImage = async (id: number) => {
   try {
     await productImageService.destroy(id)
-    
+
     if (selectedProduct.value) {
-      selectedProduct.value.images = selectedProduct.value.images.filter(i => i.id !== id)
-      
-      const index = products.value.findIndex(p => p.id === selectedProduct.value?.id)
+      selectedProduct.value.images = selectedProduct.value.images.filter((i) => i.id !== id)
+
+      const index = products.value.findIndex((p) => p.id === selectedProduct.value?.id)
       if (index !== -1) {
-        products.value[index].images = products.value[index].images.filter(i => i.id !== id)
+        products.value[index].images = products.value[index].images.filter((i) => i.id !== id)
       }
     }
-    
+
     toast.add({ severity: 'success', summary: 'Éxito', detail: 'Imagen eliminada', life: 3000 })
   } catch (error) {
     toast.add({
@@ -1329,7 +1521,7 @@ const openManagePresentationsDialog = (product: Product) => {
 
 const openAddPresentationDialog = () => {
   if (!selectedProduct.value) return
-  
+
   presentationForm.product_id = selectedProduct.value.id
   presentationForm.presentation_id = null
   presentationForm.stock = null
@@ -1341,14 +1533,14 @@ const openAddPresentationDialog = () => {
 
 const openEditPresentationDialog = (presentation: Presentation) => {
   if (!selectedProduct.value) return
-  
+
   selectedPresentation.value = presentation
   presentationForm.product_id = selectedProduct.value.id
   presentationForm.presentation_id = presentation.id
-  
+
   presentationForm.stock = presentation.stock ? Number(presentation.stock) : null
   presentationForm.unit_price = presentation.unit_price ? Number(presentation.unit_price) : null
-  
+
   presentationSubmitted.value = false
   presentationDialogMode.value = 'edit'
   presentationDialog.value = true
@@ -1361,14 +1553,16 @@ const hidePresentationDialog = () => {
 
 const savePresentation = async () => {
   presentationSubmitted.value = true
-  
-  if (!presentationForm.product_id || 
-      (presentationDialogMode.value === 'new' && !presentationForm.presentation_id) ||
-      presentationForm.stock === null || 
-      presentationForm.unit_price === null) {
+
+  if (
+    !presentationForm.product_id ||
+    (presentationDialogMode.value === 'new' && !presentationForm.presentation_id) ||
+    presentationForm.stock === null ||
+    presentationForm.unit_price === null
+  ) {
     return
   }
-  
+
   try {
     if (presentationDialogMode.value === 'new') {
       const requestData: CreateProductPresentation = {
@@ -1377,19 +1571,26 @@ const savePresentation = async () => {
         stock: presentationForm.stock,
         unit_price: presentationForm.unit_price
       }
-      
+
       await productPresentationService.create(requestData)
-      toast.add({ severity: 'success', summary: 'Éxito', detail: 'Presentación agregada', life: 3000 })
-      
+      toast.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Presentación agregada',
+        life: 3000
+      })
+
       if (selectedProduct.value) {
-        const presentation = allPresentations.value.find(p => p.id === presentationForm.presentation_id)
+        const presentation = allPresentations.value.find(
+          (p) => p.id === presentationForm.presentation_id
+        )
         if (presentation) {
-          const newPresentation = { 
+          const newPresentation = {
             ...presentation,
             stock: presentationForm.stock,
             unit_price: presentationForm.unit_price
           }
-          
+
           selectedProduct.value.presentations.push(newPresentation)
         }
       }
@@ -1398,21 +1599,28 @@ const savePresentation = async () => {
         stock: presentationForm.stock,
         unit_price: presentationForm.unit_price
       }
-      
+
       await productPresentationService.update(
         presentationForm.product_id,
         selectedPresentation.value.id,
         requestData
       )
-      toast.add({ severity: 'success', summary: 'Éxito', detail: 'Presentación actualizada', life: 3000 })
-      
-      const index = selectedProduct.value.presentations.findIndex(p => p.id === selectedPresentation.value?.id)
+      toast.add({
+        severity: 'success',
+        summary: 'Éxito',
+        detail: 'Presentación actualizada',
+        life: 3000
+      })
+
+      const index = selectedProduct.value.presentations.findIndex(
+        (p) => p.id === selectedPresentation.value?.id
+      )
       if (index !== -1) {
         selectedProduct.value.presentations[index].stock = presentationForm.stock
         selectedProduct.value.presentations[index].unit_price = presentationForm.unit_price
       }
     }
-    
+
     presentationDialog.value = false
   } catch (error) {
     toast.add({
@@ -1426,7 +1634,7 @@ const savePresentation = async () => {
 
 const confirmDeletePresentation = (presentation: Presentation) => {
   if (!selectedProduct.value) return
-  
+
   confirm.require({
     message: '¿Está seguro que desea eliminar esta presentación?',
     header: 'Confirmar',
@@ -1438,12 +1646,19 @@ const confirmDeletePresentation = (presentation: Presentation) => {
 const deletePresentation = async (productId: number, presentationId: number) => {
   try {
     await productPresentationService.destroy(productId, presentationId)
-    
+
     if (selectedProduct.value) {
-      selectedProduct.value.presentations = selectedProduct.value.presentations.filter(p => p.id !== presentationId)
+      selectedProduct.value.presentations = selectedProduct.value.presentations.filter(
+        (p) => p.id !== presentationId
+      )
     }
-    
-    toast.add({ severity: 'success', summary: 'Éxito', detail: 'Presentación eliminada', life: 3000 })
+
+    toast.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: 'Presentación eliminada',
+      life: 3000
+    })
   } catch (error) {
     toast.add({
       severity: 'error',
@@ -1490,5 +1705,13 @@ img.max-w-xs {
 
 .aspect-square {
   aspect-ratio: 1 / 1;
+}
+
+.group:hover .opacity-0 {
+  opacity: 1;
+}
+
+.transition-opacity {
+  transition: opacity 0.2s ease-in-out;
 }
 </style>

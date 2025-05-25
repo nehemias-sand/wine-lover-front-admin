@@ -117,9 +117,7 @@ import Dropdown from 'primevue/dropdown'
 import Dialog from 'primevue/dialog'
 import ConfirmDialog from 'primevue/confirmdialog'
 import type { Presentation } from '@/services/presentations/interfaces/presentation-response.interface'
-import type {
-  CreatePresentation,
-} from '@/services/presentations/interfaces/presentation-request.interface'
+import type { CreatePresentation } from '@/services/presentations/interfaces/presentation-request.interface'
 import * as presentationService from '@/services/presentations/presentation.service'
 import type { GetPresentationParams } from '@/services/manufacturers/interfaces/get-manufacturer-params.interface'
 import axios from 'axios'

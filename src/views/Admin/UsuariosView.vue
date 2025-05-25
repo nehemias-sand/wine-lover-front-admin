@@ -133,7 +133,7 @@ const user = reactive<User>({
   profile: {
     id: 0,
     name: '',
-    description: '',
+    description: ''
   },
   profile_id: 0,
   state: false
@@ -170,7 +170,7 @@ const loadUsers = async (page = 1) => {
 const loadProfiles = async () => {
   try {
     const response = await catalogsService.getProfiles()
-    profiles.value = response.data.filter(profile => profile.id !== 2)
+    profiles.value = response.data.filter((profile) => profile.id !== 2)
   } catch (error) {
     toast.add({
       severity: 'error',
@@ -225,10 +225,10 @@ const saveUser = async () => {
         await userService.registerAdmin(user)
         toast.add({ severity: 'success', summary: 'Éxito', detail: 'Usuario creado', life: 3000 })
       } else {
-        await userService.update(user.id, { 
-          username: user.username, 
+        await userService.update(user.id, {
+          username: user.username,
           email: user.email,
-          profile_id: user.profile_id 
+          profile_id: user.profile_id
         })
         toast.add({
           severity: 'success',
