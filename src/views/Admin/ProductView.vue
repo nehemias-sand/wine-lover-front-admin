@@ -513,7 +513,7 @@
               >
                 <div
                   v-for="(preview, index) in imagesPreviews"
-                  :key="`preview-${index}`"
+                  :key="`preview-${index}-${preview.substring(0, 20)}`"
                   class="relative cursor-pointer group"
                 >
                   <div class="aspect-square overflow-hidden rounded border-2 border-gray-200">
@@ -524,12 +524,6 @@
                       @click="openPreviewImageDialog(preview)"
                     />
                   </div>
-                  <Button
-                    icon="pi pi-times"
-                    class="p-button-rounded p-button-danger p-button-sm absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                    @click="removeImagePreview(index)"
-                    v-tooltip.top="'Eliminar imagen'"
-                  />
                 </div>
               </div>
             </div>
@@ -644,7 +638,7 @@
         <div v-if="newImagesPreviews.length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
           <div
             v-for="(preview, index) in newImagesPreviews"
-            :key="`new-preview-${index}`"
+            :key="`new-preview-${index}-${preview.substring(0, 20)}`"
             class="relative cursor-pointer group"
           >
             <div class="aspect-square overflow-hidden rounded border-2 border-gray-200">
@@ -904,11 +898,9 @@ const allPresentations = ref<Presentation[]>([])
 const totalRecords = ref(0)
 const loading = ref(false)
 
-// Referencias a los componentes FileUpload
 const fileUploadRef = ref()
 const newFileUploadRef = ref()
 
-// Diálogos
 const productDetailsDialog = ref(false)
 const productDialog = ref(false)
 const imagesDialog = ref(false)
@@ -922,7 +914,6 @@ const presentationSubmitted = ref(false)
 const dialogMode = ref<'new' | 'edit'>('new')
 const presentationDialogMode = ref<'new' | 'edit'>('new')
 
-// Elementos seleccionados
 const selectedProduct = ref<Product | null>(null)
 const selectedPresentation = ref<Presentation | null>(null)
 const imagesPreviews = ref<string[]>([])
@@ -1128,7 +1119,6 @@ const clearFilters = () => {
   loadProducts()
 }
 
-// Vista previa de imágenes
 const openImagePreview = (image: ProductImage) => {
   previewImageSrc.value = apiStorage + '/' + image.url_image
   imagePreviewTitle.value = 'Vista previa de imagen'
@@ -1180,21 +1170,28 @@ const openEditProductDialog = (product: Product) => {
 const hideProductDialog = () => {
   productDialog.value = false
   submitted.value = false
-  // Limpiar el componente FileUpload
   if (fileUploadRef.value) {
     fileUploadRef.value.clear()
   }
 }
 
-// Manejo mejorado de imágenes para nuevo producto
+const createFileId = (file: File): string => {
+  return `${file.name}-${file.size}-${file.lastModified}`
+}
+
+const fileExists = (file: File, fileArray: File[]): boolean => {
+  const fileId = createFileId(file)
+  return fileArray.some((existingFile) => createFileId(existingFile) === fileId)
+}
+
 const onImagesSelect = (event: any) => {
   const files = event.files
   if (files && files.length > 0) {
-    // Agregar archivos al array
-    files.forEach((file: File) => {
+    const newFiles = files.filter((file: File) => !fileExists(file, productForm.images))
+
+    newFiles.forEach((file: File) => {
       productForm.images.push(file)
 
-      // Crear vista previa
       const reader = new FileReader()
       reader.onload = (e) => {
         imagesPreviews.value.push(e.target?.result as string)
@@ -1206,9 +1203,8 @@ const onImagesSelect = (event: any) => {
 
 const onImageRemove = (event: any) => {
   const file = event.file
-  const index = productForm.images.findIndex(
-    (f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified
-  )
+  const fileId = createFileId(file)
+  const index = productForm.images.findIndex((f) => createFileId(f) === fileId)
 
   if (index !== -1) {
     productForm.images.splice(index, 1)
@@ -1219,22 +1215,6 @@ const onImageRemove = (event: any) => {
 const onImagesClear = () => {
   productForm.images = []
   imagesPreviews.value = []
-}
-
-// Función para eliminar imagen desde la vista previa
-const removeImagePreview = (index: number) => {
-  if (index >= 0 && index < productForm.images.length) {
-    productForm.images.splice(index, 1)
-    imagesPreviews.value.splice(index, 1)
-
-    // Actualizar el componente FileUpload
-    if (fileUploadRef.value) {
-      // Recrear la lista de archivos en el componente
-      const dt = new DataTransfer()
-      productForm.images.forEach((file) => dt.items.add(file))
-      fileUploadRef.value.files = dt.files
-    }
-  }
 }
 
 const addPresentationRow = () => {
@@ -1372,7 +1352,9 @@ const hideAddImagesDialog = () => {
 const onNewImagesSelect = (event: any) => {
   const files = event.files
   if (files && files.length > 0) {
-    files.forEach((file: File) => {
+    const newFiles = files.filter((file: File) => !fileExists(file, newImages.value))
+
+    newFiles.forEach((file: File) => {
       newImages.value.push(file)
 
       const reader = new FileReader()
@@ -1386,9 +1368,8 @@ const onNewImagesSelect = (event: any) => {
 
 const onNewImageRemove = (event: any) => {
   const file = event.file
-  const index = newImages.value.findIndex(
-    (f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified
-  )
+  const fileId = createFileId(file)
+  const index = newImages.value.findIndex((f) => createFileId(f) === fileId)
 
   if (index !== -1) {
     newImages.value.splice(index, 1)
@@ -1409,7 +1390,11 @@ const removeNewImagePreview = (index: number) => {
     if (newFileUploadRef.value) {
       const dt = new DataTransfer()
       newImages.value.forEach((file) => dt.items.add(file))
-      newFileUploadRef.value.files = dt.files
+
+      const fileInput = newFileUploadRef.value.$el.querySelector('input[type="file"]')
+      if (fileInput) {
+        fileInput.files = dt.files
+      }
     }
   }
 }
@@ -1461,6 +1446,7 @@ const toggleImageState = async (image: ProductImage) => {
   try {
     await productImageService.changeState(image.id)
 
+    // Actualizar el estado en la lista local
     if (selectedProduct.value) {
       const index = selectedProduct.value.images.findIndex((i) => i.id === image.id)
       if (index !== -1) {
@@ -1471,7 +1457,7 @@ const toggleImageState = async (image: ProductImage) => {
     toast.add({
       severity: 'success',
       summary: 'Éxito',
-      detail: `Imagen ${image.state ? 'desactivada' : 'activada'}`,
+      detail: `Imagen ${image.state ? 'activada' : 'desactivada'}`,
       life: 3000
     })
   } catch (error) {
@@ -1497,9 +1483,11 @@ const deleteImage = async (id: number) => {
   try {
     await productImageService.destroy(id)
 
+    // Eliminar la imagen de la lista local
     if (selectedProduct.value) {
       selectedProduct.value.images = selectedProduct.value.images.filter((i) => i.id !== id)
 
+      // Actualizar el producto en la lista principal
       const index = products.value.findIndex((p) => p.id === selectedProduct.value?.id)
       if (index !== -1) {
         products.value[index].images = products.value[index].images.filter((i) => i.id !== id)
@@ -1541,6 +1529,7 @@ const openEditPresentationDialog = (presentation: Presentation) => {
   presentationForm.product_id = selectedProduct.value.id
   presentationForm.presentation_id = presentation.id
 
+  // Usar directamente los valores de stock y precio de la presentación
   presentationForm.stock = presentation.stock ? Number(presentation.stock) : null
   presentationForm.unit_price = presentation.unit_price ? Number(presentation.unit_price) : null
 
@@ -1568,6 +1557,7 @@ const savePresentation = async () => {
 
   try {
     if (presentationDialogMode.value === 'new') {
+      // Agregar nueva presentación
       const requestData: CreateProductPresentation = {
         product_id: presentationForm.product_id,
         presentation_id: presentationForm.presentation_id!,
@@ -1583,17 +1573,21 @@ const savePresentation = async () => {
         life: 3000
       })
 
+      // Actualizar la lista local
       if (selectedProduct.value) {
+        // Buscar la presentación completa
         const presentation = allPresentations.value.find(
           (p) => p.id === presentationForm.presentation_id
         )
         if (presentation) {
+          // Crear una copia de la presentación con los valores de stock y precio
           const newPresentation = {
             ...presentation,
             stock: presentationForm.stock,
             unit_price: presentationForm.unit_price
           }
 
+          // Agregar la presentación al producto
           selectedProduct.value.presentations.push(newPresentation)
         }
       }
