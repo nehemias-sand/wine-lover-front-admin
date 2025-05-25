@@ -469,7 +469,7 @@
               </div>
 
               <small
-                class="p-error block mt-2"
+                class="p-error block mt-2 text-red-600"
                 v-if="submitted && productForm.presentations.length === 0"
               >
                 Debe agregar al menos una presentación.
@@ -499,7 +499,10 @@
                   :showUploadButton="false"
                   :showCancelButton="false"
                 />
-                <small class="p-error" v-if="submitted && productForm.images.length === 0">
+                <small
+                  class="p-error text-red-600"
+                  v-if="submitted && productForm.images.length === 0"
+                >
                   Debe agregar al menos una imagen.
                 </small>
               </div>
@@ -633,7 +636,7 @@
             :showUploadButton="false"
             :showCancelButton="false"
           />
-          <small class="p-error" v-if="newImagesSubmitted && newImages.length === 0">
+          <small class="p-error text-red-600" v-if="newImagesSubmitted && newImages.length === 0">
             Debe seleccionar al menos una imagen.
           </small>
         </div>
