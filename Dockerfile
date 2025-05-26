@@ -13,7 +13,7 @@ RUN yarn build-only
 
 
 FROM nginx:1.27.5 AS prod
-EXPOSE 8081
+EXPOSE 8080
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
