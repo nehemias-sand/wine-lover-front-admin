@@ -4,7 +4,7 @@
       <div>
         <img
           class="mx-auto h-40 w-auto"
-          src="../../public/wine-lovers.png"
+          src="/wine-lovers.png"
           alt="Logo"
         />
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Iniciar sesión</h2>

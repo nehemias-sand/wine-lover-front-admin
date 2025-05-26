@@ -3,7 +3,7 @@
     <!-- Header con logo -->
     <div class="pl-9 pr-10 border-b border-gray-200">
       <img
-        src="../../../public/wine-lovers.png"
+        src="/wine-lovers.png"
         alt="Logo Universidad"
         class="w-full h-[120px] object-contain"
       />
