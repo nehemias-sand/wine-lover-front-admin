@@ -58,7 +58,7 @@
           <button
             type="submit"
             :disabled="!isFormValid"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#b1291d] hover:bg-[#8f1f16] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b1291d]"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#bb976d] hover:bg-[#bb976d] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#bb976d]"
             :class="{ 'opacity-50 cursor-not-allowed': !isFormValid }"
           >
             Iniciar sesión
