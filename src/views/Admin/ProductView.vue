@@ -872,7 +872,7 @@ import type { CreateProductImage } from '@/services/products/interfaces/product-
 import type {
   CreateProductPresentation,
   UpdateProductPresentation
-} from '@/services/products/product-presentation-request.interface'
+} from '@/services/products/interfaces/product-presentation-request.interface'
 import type { Presentation } from '@/services/presentations/interfaces/presentation-response.interface'
 import type {
   CategoryProduct,

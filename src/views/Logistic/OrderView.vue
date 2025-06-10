@@ -162,7 +162,7 @@
               <div class="flex items-center gap-3">
                 <img 
                   v-if="slotProps.data.product.images && slotProps.data.product.images.length > 0" 
-                  :src="slotProps.data.product.images[0].url_image" 
+                  :src="apiStorage + '/' + slotProps.data.product.images[0].url_image" 
                   :alt="slotProps.data.product.name"
                   class="w-12 h-12 object-cover rounded"
                 />
@@ -264,6 +264,8 @@ const selectedOrder = ref<Order | null>(null)
 const newOrderStatusId = ref<number | null>(null)
 
 const orderStatuses = ref<OrderStatus[]>([])
+
+const apiStorage = import.meta.env.VITE_VUE_APP_API_STORAGE
 
 const params = reactive<GetOrderParams>({
   order_status_id: undefined,

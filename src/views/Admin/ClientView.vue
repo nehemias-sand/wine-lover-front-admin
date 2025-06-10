@@ -383,12 +383,12 @@
             <template #body="slotProps">
               <span
                 :class="{
-                  'text-green-600': slotProps.data.type === 'EARNED',
-                  'text-red-600': slotProps.data.type === 'USED'
+                  'text-green-600': Number.parseFloat(slotProps.data.amount) > 0,
+                  'text-red-600': Number.parseFloat(slotProps.data.amount) < 0
                 }"
                 class="font-bold"
               >
-                {{ slotProps.data.type === 'EARNED' ? '+' : '-' }}
+                {{ Number.parseFloat(slotProps.data.amount) > 0 ? '+' : '' }}
                 {{ formatCurrency(slotProps.data.amount) }}
               </span>
             </template>
