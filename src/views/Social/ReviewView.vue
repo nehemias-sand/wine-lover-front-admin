@@ -62,7 +62,7 @@
               v-tooltip.top="'Editar Review'"
             />
             <Button
-              :icon="slotProps.data.comments_available ? 'pi pi-comment-slash' : 'pi pi-comments'"
+              :icon="slotProps.data.comments_available ? 'pi pi-check' : 'pi pi-ban'"
               :class="[
                 'p-button-rounded p-button-sm',
                 slotProps.data.comments_available ? 'p-button-warning' : 'p-button-success'
@@ -171,10 +171,10 @@
           <Column header="Acciones" style="width: 20%">
             <template #body="slotProps">
               <Button
-                :icon="slotProps.data.banned ? 'pi pi-check' : 'pi pi-ban'"
+                :icon="slotProps.data.banned ? 'pi pi-ban' : 'pi pi-check'"
                 :class="[
                   'p-button-rounded p-button-sm',
-                  slotProps.data.banned ? 'p-button-success' : 'p-button-danger'
+                  slotProps.data.banned ? 'p-button-danger' : 'p-button-success'
                 ]"
                 @click="toggleCommentBan(slotProps.data)"
                 v-tooltip.top="slotProps.data.banned ? 'Desbanear Comentario' : 'Banear Comentario'"
@@ -228,7 +228,7 @@
                 mode="basic"
                 :auto="true"
                 accept="image/*"
-                :maxFileSize="1000000"
+                :maxFileSize="5000000"
                 @select="onImageSelect"
                 @error="onImageError"
                 chooseLabel="Seleccionar Imagen"
@@ -556,7 +556,7 @@ const toggleCommentBan = async (comment: Comment) => {
     toast.add({
       severity: 'success',
       summary: 'Éxito',
-      detail: `Comentario ${comment.banned ? 'desbaneado' : 'baneado'}`,
+      detail: `Comentario ${comment.banned ? 'baneado' : 'desbaneado'}`,
       life: 3000
     })
   } catch (error) {
